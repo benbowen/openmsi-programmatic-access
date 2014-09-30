@@ -40,6 +40,10 @@ Interactive notebooks + examples can be downloaded by cloning this repo.
     Alternate visualization of dense spectra. Examples include:
     - Comparing the spectra at two locations
     
-* [**Chapter 7: Access to private data**](http://nbviewer.ipython.org/urls/raw.github.com/BenBowen/openmsi-programmatic-access/master/Chapter7/.ipynb)
+* [**Chapter 7: Access to private data**](http://nbviewer.ipython.org/urls/raw.github.com/BenBowen/openmsi-programmatic-access/master/Chapter7/Chapter7_AccessToPrivateData.ipynb)
+    A quick tutorial on how to authenticate and login. Examples include:
+    - logging in
+
+* [**Chapter 8: Convert Data to OpenMSI Format**](http://nbviewer.ipython.org/urls/raw.github.com/BenBowen/openmsi-programmatic-access/master/Chapter8/Chapter8_convertDataToOpenMSI.ipynb)
     A quick tutorial on how to authenticate and login. Examples include:
     - logging in
