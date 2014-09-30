@@ -8,7 +8,7 @@ More information about the file-format, API, and tools can be found [here](https
 
 The below chapters are rendered via the *nbviewer* at
 [nbviewer.ipython.org/](http://nbviewer.ipython.org/), and is read-only and rendered in real-time.
-Interactive notebooks + examples can be downloaded by cloning! 
+Interactive notebooks + examples can be downloaded by cloning the github repository [here](http://github.com/benbowen/openmsi-programmatic-access/). 
 
 * [**Chapter 1: Getting Started**](http://nbviewer.ipython.org/urls/raw.github.com/BenBowen/openmsi-programmatic-access/master/Chapter1/Chapter1_GettingStarted.ipynb)
     Introduction to the methods available and described. Examples include:
