@@ -49,3 +49,9 @@ Interactive notebooks + examples can be downloaded by cloning this repo.
     - mzML, imzML, and img formated data
     - adding metadata
     - adding analysis tasks to the initial file conversion
+
+* [**Chapter 9: Kinetic Mass Spectrometry Imaging (kMSI) **](http://nbviewer.ipython.org/urls/raw.github.com/BenBowen/openmsi-programmatic-access/master/Chapter9/Chapter9_kMSI.ipynb)
+    For deuterium adminstration, how to make and analyze kinetic images. Examples include:
+    - Ratio images for isotopologues
+    - Dealing with overlapping isotopic patterns
+    - Chemical Formulae, Isotopic Pattern Estimation, and Fitting
