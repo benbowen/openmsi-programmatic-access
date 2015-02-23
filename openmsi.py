@@ -1,3 +1,24 @@
+import json
+import numpy as np
+
+def getFilelist(client):
+	payload = {'format':'JSON','mtype':'filelistView'}
+	url = 'https://openmsi.nersc.gov/openmsi/qmetadata'
+	r = client.get(url,params=payload)
+	fileList = json.loads(r.content)
+	return fileList.keys()
+
+def getMZ(client,filename,expIndex,dataIndex):
+	payload = {'file':filename,
+          'expIndex':expIndex,'dataIndex':dataIndex,'qspectrum_viewerOption':'0',
+          'qslice_viewerOption':'0',
+          'col':0,'row':0,
+          'findPeak':'0','format':'JSON'}
+	url = 'https://openmsi.nersc.gov/openmsi/qmz'
+	r = client.get(url,params=payload)
+	data = json.loads(r.content)
+	return np.asarray(data[u'values_spectra'])
+
 def isotopic_pattern(fList,DAbund, num_D_sites):
 	# fList is a list of formula vectors
 
