@@ -1,6 +1,17 @@
 import json
 import numpy as np
+import getpass
 
+def authenticateUser(client,username):
+	password = getpass.getpass()
+	authURL = 'https://openmsi.nersc.gov/openmsi/client/login/'
+	# Retrieve the CSRF token first
+	client.get(authURL)  # sets cookie
+	csrftoken = client.cookies['csrftoken']
+	login_data = dict(username=username, password=password, csrfmiddlewaretoken=csrftoken, next='/')
+	r = client.post(authURL, data=login_data, headers=dict(Referer=authURL))
+	return client
+	
 def getFilelist(client):
 	payload = {'format':'JSON','mtype':'filelistView'}
 	url = 'https://openmsi.nersc.gov/openmsi/qmetadata'
