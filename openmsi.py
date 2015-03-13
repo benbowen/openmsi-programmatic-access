@@ -1,6 +1,9 @@
 import json
 import numpy as np
 import getpass
+import re
+from elements import ELEMENTS
+
 
 def authenticateUser(client,username):
 	password = getpass.getpass()
@@ -29,6 +32,36 @@ def getMZ(client,filename,expIndex,dataIndex):
 	r = client.get(url,params=payload)
 	data = json.loads(r.content)
 	return np.asarray(data[u'values_spectra'])
+
+def chemformula_struct(formula):
+	matEle = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
+	for idx, row in enumerate(matEle):
+	    id, num = row
+	    if num is '':
+	        matEle[idx] = (id, '1')
+	    else:
+	    	matEle[idx] = (id, num)
+		return matEle
+
+def monoisotopicmass(formula):
+	f = chemformula_struct(formula)
+	m = np.zeros((len(f)))
+	for i in range(len(f)):
+	    e = ELEMENTS[f[i][0]]
+	    maxIso = 0
+	    for iso in e.isotopes:
+	        if e.isotopes[iso].abundance > maxIso:
+	            maxIso = e.isotopes[iso].abundance
+	            m[i] = float(e.isotopes[iso].mass) * float(f[i][1])
+	return np.sum(m)
+
+def chemformula_list(formula):
+	f = chemformula_struct(formula)
+	str = 'HCNOSPDX'
+	fList = np.zeros((len(str)))
+	for i in range(len(f)):
+	    fList[str.index(f[i][0])] = f[i][1]
+	return fList
 
 def isotopic_pattern(fList,DAbund, num_D_sites):
 	# fList is a list of formula vectors
