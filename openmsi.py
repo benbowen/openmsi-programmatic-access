@@ -77,10 +77,10 @@ def isotopic_pattern(fList,DAbund, num_D_sites):
 		labVec[0] = fVec[0] - num_D_sites[iii]
 		x2,y2,m2 = isotope(labVec,DAbund)
 		mzvec = np.union1d(mzvec,x2)
-	mzvec = np.round(mzvec*200)/200
+	mzvec = np.round(mzvec*200)/200 #hack to round for unique
 	mzvec = np.unique(mzvec)
 	for i in range(len(mzvec)-1):
-	    if abs(mzvec[i]-mzvec[i+1])<0.1:
+	    if abs(mzvec[i]-mzvec[i+1])<0.1: #hack to group less than 0.1. should be parameter
 	        mzvec[i+1] = mzvec[i]
 	            
 	mzvec = np.unique(mzvec)
