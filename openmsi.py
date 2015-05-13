@@ -3,7 +3,7 @@ import numpy as np
 import getpass
 import re
 from elements import ELEMENTS
-
+import copy
 
 def authenticateUser(client,username):
 	password = getpass.getpass()
@@ -93,7 +93,7 @@ def isotopic_pattern(fList,DAbund, num_D_sites):
 		    idx = np.argmin(abs(x-mzvec))
 		    isoY[iii*2+0,idx] = y1[i]
 
-		labVec = fVec[:]
+		labVec = copy.deepcopy(fVec)
 		labVec[6] = num_D_sites[iii]
 		labVec[0] = fVec[0] - num_D_sites[iii]
 		x2,y2,m2 = isotope(labVec,DAbund)
@@ -146,7 +146,7 @@ def isotope(fVec,DAbund):
 	scaleFactor = 100000
 	MAX_ELEMENTS=7+1  # add 1 due to mass correction 'element'
 	MAX_ISOTOPES=4    # maxiumum # of isotopes for one element
-	CUTOFF=1e-4     # relative intensity cutoff for plotting
+	CUTOFF=1e-4    # relative intensity cutoff for plotting
 
 	WINDOW_SIZE = 500
 	#WINDOW_SIZE=input('Window size (in Da) ---> ');
