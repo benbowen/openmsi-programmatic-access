@@ -37,11 +37,11 @@ def chemformula_struct(formula):
 	matEle = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
 	for idx, row in enumerate(matEle):
 	    id, num = row
-	    if num is '':
-	        matEle[idx] = (id, '1')
-	    else:
-	    	matEle[idx] = (id, num)
-		return matEle
+	    try:
+	    	float(num)
+	    except:
+	  		matEle[idx] = (id, '1')
+	return matEle
 
 def monoisotopicmass(formula):
 	f = chemformula_struct(formula)
