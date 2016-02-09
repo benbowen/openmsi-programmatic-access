@@ -2,6 +2,37 @@ import numpy as np
 from scipy import interpolate
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import getpass
+import json, requests
+
+def authenticateUser(client,username):
+    password = getpass.getpass()
+    authURL = 'https://openmsi.nersc.gov/openmsi/client/login/'
+    # Retrieve the CSRF token first
+    client.get(authURL)  # sets cookie
+    csrftoken = client.cookies['csrftoken']
+    login_data = dict(username=username, password=password, csrfmiddlewaretoken=csrftoken, next='/')
+    r = client.post(authURL, data=login_data, headers=dict(Referer=authURL))
+    return client
+    
+def getFilelist(client):
+    payload = {'format':'JSON','mtype':'filelistView'}
+    url = 'https://openmsi.nersc.gov/openmsi/qmetadata'
+    r = client.get(url,params=payload)
+    fileList = json.loads(r.content)
+    return fileList.keys()
+
+def getMZ(client,filename,expIndex,dataIndex):
+    payload = {'file':filename,
+          'expIndex':expIndex,'dataIndex':dataIndex,'qspectrum_viewerOption':'0',
+          'qslice_viewerOption':'0',
+          'col':0,'row':0,
+          'findPeak':'0','format':'JSON'}
+    url = 'https://openmsi.nersc.gov/openmsi/qmz'
+    r = client.get(url,params=payload)
+    data = json.loads(r.content)
+    return np.asarray(data[u'values_spectra'])
+
 
 def fineTunePosition(bkImage,xRough,yRough,markerRadius):
     fig = plt.figure()
