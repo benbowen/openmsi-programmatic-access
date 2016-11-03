@@ -51,11 +51,16 @@ def getArrayedImage(client,ion,massRange,mz_axis,filename,expIndex=0,dataIndex=0
     data = np.asarray(json.loads(r.content.decode('utf-8')))
     return data
 
+def percentileNormalizeImage(image,min_percentile = 1, max_percentile = 99):
+    image = image.astype(float)
+    image -= np.percentile(image,min_percentile)
+    image[image<0] = 0
+    image *= 255/np.percentile(image,max_percentile)
+    image[image>255] = 255
+    return image.astype('uint8')
+
 def saveImageToFile(image,outfile):
-    image -= image.min()
-    image *= 255/image.max()
-    image = image.astype('uint8')
-    im = Image.fromarray(image)
+    im = Image.fromarray(percentileNormalizeImage(image))
     im.save(outfile)
     
 def chemformula_struct(formula):
