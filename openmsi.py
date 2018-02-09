@@ -4,6 +4,7 @@ import getpass
 import re
 from elements import ELEMENTS
 import copy
+from PIL import Image
 
 def authenticateUser(client,username):
 	password = getpass.getpass()
@@ -22,7 +23,7 @@ def getFilelist(client):
 	fileList = json.loads(r.content)
 	return fileList.keys()
 
-def getMZ(client,filename,expIndex,dataIndex):
+def getMZ(client,filename,expIndex=0,dataIndex=0):
 	payload = {'file':filename,
           'expIndex':expIndex,'dataIndex':dataIndex,'qspectrum_viewerOption':'0',
           'qslice_viewerOption':'0',
@@ -33,6 +34,35 @@ def getMZ(client,filename,expIndex,dataIndex):
 	data = json.loads(r.content)
 	return np.asarray(data[u'values_spectra'])
 
+def getArrayedImage(client,ion,massRange,mz_axis,filename,expIndex=0,dataIndex=0,reduction='max'):
+    idx = np.where(abs(mz_axis-ion)<massRange) #get the m/z indices within the range
+    if(len(idx[0])<=0):
+        raise ValueError("Ion {:f} not present in the file {}".format(ion,filename))
+                
+    payload = {'file':filename,
+               'expIndex':expIndex,
+               'dataIndex':dataIndex,
+               'format':'JSON',
+               'mz':'%d:%d'%(min(idx[0]),max(idx[0])),
+               'operations':'[{"min_dim": 2, "reduction": "%s", "axis": -1}]'%reduction
+               }
+    url = 'https://openmsi.nersc.gov/openmsi/qcube'
+    r = client.get(url,params=payload)
+    data = np.asarray(json.loads(r.content.decode('utf-8')))
+    return data
+
+def percentileNormalizeImage(image,min_percentile = 1, max_percentile = 99):
+    image = image.astype(float)
+    image -= np.percentile(image,min_percentile)
+    image[image<0] = 0
+    image *= 255/np.percentile(image,max_percentile)
+    image[image>255] = 255
+    return image.astype('uint8')
+
+def saveImageToFile(image,outfile):
+    im = Image.fromarray(percentileNormalizeImage(image))
+    im.save(outfile)
+    
 def chemformula_struct(formula):
 	matEle = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
 	for idx, row in enumerate(matEle):
