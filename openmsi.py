@@ -8,7 +8,7 @@ from PIL import Image
 
 def authenticateUser(client,username):
 	password = getpass.getpass()
-	authURL = 'https://openmsi.nersc.gov/openmsi/client/login/'
+	authURL = 'https://openmsi.nersc.gov/client/login/'
 	# Retrieve the CSRF token first
 	client.get(authURL)  # sets cookie
 	csrftoken = client.cookies['csrftoken']
@@ -18,7 +18,7 @@ def authenticateUser(client,username):
 	
 def getFilelist(client):
 	payload = {'format':'JSON','mtype':'filelistView'}
-	url = 'https://openmsi.nersc.gov/openmsi/qmetadata'
+	url = 'https://openmsi.nersc.gov/qmetadata'
 	r = client.get(url,params=payload)
 	fileList = json.loads(r.content)
 	return fileList.keys()
@@ -29,7 +29,7 @@ def getMZ(client,filename,expIndex=0,dataIndex=0):
           'qslice_viewerOption':'0',
           'col':0,'row':0,
           'findPeak':'0','format':'JSON'}
-	url = 'https://openmsi.nersc.gov/openmsi/qmz'
+	url = 'https://openmsi.nersc.gov/qmz'
 	r = client.get(url,params=payload)
 	data = json.loads(r.content)
 	return np.asarray(data[u'values_spectra'])
@@ -46,7 +46,7 @@ def getArrayedImage(client,ion,massRange,mz_axis,filename,expIndex=0,dataIndex=0
                'mz':'%d:%d'%(min(idx[0]),max(idx[0])),
                'operations':'[{"min_dim": 2, "reduction": "%s", "axis": -1}]'%reduction
                }
-    url = 'https://openmsi.nersc.gov/openmsi/qcube'
+    url = 'https://openmsi.nersc.gov/qcube'
     r = client.get(url,params=payload)
     data = np.asarray(json.loads(r.content.decode('utf-8')))
     return data
